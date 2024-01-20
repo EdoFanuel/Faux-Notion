@@ -11,3 +11,4 @@ export function getContentType(ordinal: number | ContentType): ContentType {
 }
 
 export type ContentProps = HeaderProps | ParagraphProps;
+export type Content = { type: ContentType, content: ContentProps }

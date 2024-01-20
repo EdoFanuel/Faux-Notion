@@ -1,4 +1,4 @@
-import { clamp } from "@/common/number_functions";
+import { clamp } from "@/common/common_functions";
 
 export interface HeaderProps {
     level: number,
