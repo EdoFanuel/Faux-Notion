@@ -29,7 +29,7 @@ export default function Article() {
         
         setSelectedType(newType)
         setSelectedContent(content)
-        if (selectedId) {
+        if (selectedId && selectedId in contents) {
             contents[selectedId] = { type: newType, content}
             setContents(contents)
         }
@@ -38,19 +38,21 @@ export default function Article() {
     function handleContentChange(content: ContentProps) {
         console.log(`change content to = ${JSON.stringify(content)}`)
         setSelectedContent(content)
-        if (selectedId) {
+        if (selectedId && selectedId in contents) {
             contents[selectedId].content = content
             setContents(contents)
         }
     }
 
     function editContent(id: string) {
+        console.log(`Editing content ID = ${id}}`)
         setSelectedId(id)
         setSelectedType(contents[id].type)
         setSelectedContent(contents[id].content)
     }
 
     function createContent(type: ContentType, content: ContentProps) {
+        console.log(`Creating new content for type=${ContentType[type]}, content=${JSON.stringify(content)}`)
         const id = generateUUID()
         setContentOrder([...contentOrder, id])
 
@@ -62,10 +64,8 @@ export default function Article() {
     }
 
     function deleteContent(id: string) {
-        const contentIdx = contentOrder.indexOf(id)
-        if (contentIdx > -1) {
-            setContentOrder(contentOrder.splice(contentIdx, 1))
-        }
+        console.log(`Deleting content ID = ${id}`)
+        setContentOrder(contentOrder.filter(x => x != id))
         
         const newContents = {...contents}
         delete newContents[id]

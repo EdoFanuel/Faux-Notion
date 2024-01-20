@@ -12,6 +12,7 @@ export type WrapperProps = {
 export function ContentWrapper(props: WrapperProps) {
     const { id, content, onEdit, onDelete } = props
     let contentComponent: React.ReactNode
+    if (!content) return (<></>)
     switch(content.type) {
         case ContentType.Header: 
             const headerProps = content.content as HeaderProps
