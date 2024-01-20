@@ -29,7 +29,7 @@ export default function Editor(props: EditorProps) {
         }
     }
     return (
-        <div>
+        <div className="">
             <label>Item ID: {contentId}</label><br/>
             <label>
                 Item Type:&nbsp; 

@@ -70,6 +70,8 @@ export default function Article() {
         const newContents = {...contents}
         delete newContents[id]
         setContents(newContents)
+
+        if (id == selectedId) resetEditor()
     }
 
     function resetEditor() {
@@ -83,8 +85,8 @@ export default function Article() {
         return <ContentWrapper key={id} id={id} content={content} onEdit={editContent} onDelete={deleteContent}/>
     })
     return (    
-        <div>
-            <Editor 
+        <div className="">
+            <Editor
                 type={selectedType} 
                 contentId={selectedId}
                 contentData={selectedContent}
@@ -93,7 +95,7 @@ export default function Article() {
                 onCreate={createContent}
             />
             <hr/>
-            <ul title="Debug">
+            <ul title="Debug" className="">
                 <li>Selected ID: {selectedId}</li>
                 <li>Selected type: {ContentType[selectedType]}</li>
                 <li>Selected content: {JSON.stringify(selectedContent)}</li>
