@@ -1,4 +1,4 @@
-import { Content, ContentType } from "./component_type"
+import { Content, ContentType } from "../common/component_type"
 import { Header, HeaderProps } from "./header"
 import { Paragraph, ParagraphProps } from "./paragraph"
 
@@ -26,8 +26,8 @@ export function ContentWrapper(props: WrapperProps) {
     return (
         <div id={id}>
             {contentComponent}
-            <button onClick={e => onEdit(id)}>Edit</button>
-            <button onClick={e => onDelete(id)}>Delete</button>
+            <button type='button' onClick={e => onEdit(id)}>Edit</button>
+            <button type='button' onClick={e => onDelete(id)}>Delete</button>
         </div>
     )
 }

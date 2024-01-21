@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 import { HeaderEditor, HeaderProps } from "./header"
 import { ParagraphEditor, ParagraphProps } from "./paragraph"
-import { ContentProps, ContentType, getContentType } from "./component_type"
+import { ContentProps, ContentType, getContentType } from "../common/component_type"
 
 
 type EditorProps = {
@@ -44,9 +44,13 @@ export default function Editor(props: EditorProps) {
                 </select>
             </label>
             <hr/>
-            {renderContentEditor(type, contentData)}
+            { renderContentEditor(type, contentData) }
             <hr/>
-            {contentId ? '' : <button onClick={e => onCreate(type, contentData)}>Add new {ContentType[type]}</button>}
+            { contentId ? '' : 
+                <button type='button' onClick={e => onCreate(type, contentData)} className=''>
+                    Add new {ContentType[type]}
+                </button>
+            }
         </div>
     )
 }

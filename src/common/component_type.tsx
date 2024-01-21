@@ -1,5 +1,5 @@
-import { HeaderProps } from "./header";
-import { ParagraphProps } from "./paragraph";
+import { HeaderProps } from "../components/header";
+import { ParagraphProps } from "../components/paragraph";
 
 export enum ContentType {
     Paragraph,

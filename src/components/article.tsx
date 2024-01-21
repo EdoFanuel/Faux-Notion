@@ -4,9 +4,10 @@ import { useState } from "react";
 import Editor from "./editor";
 import { defaultProps as headerProps } from "./header";
 import { defaultProps as paragraphProps } from "./paragraph";
-import { Content, ContentProps, ContentType } from "./component_type";
+import { Content, ContentProps, ContentType } from "../common/component_type";
 import { generateUUID } from "@/common/common_functions";
 import { ContentWrapper } from "./content_wrapper";
+import DebugWindow from "./debug_window";
 
 export default function Article() {
     const [contents, setContents] = useState<Record<string, Content>>({})
@@ -85,23 +86,25 @@ export default function Article() {
         return <ContentWrapper key={id} id={id} content={content} onEdit={editContent} onDelete={deleteContent}/>
     })
     return (    
-        <div className="">
-            <Editor
-                type={selectedType} 
-                contentId={selectedId}
-                contentData={selectedContent}
-                onTypeChange={handleTypeChange} 
-                onContentChange={handleContentChange}
-                onCreate={createContent}
-            />
-            <hr/>
-            <ul title="Debug" className="">
-                <li>Selected ID: {selectedId}</li>
-                <li>Selected type: {ContentType[selectedType]}</li>
-                <li>Selected content: {JSON.stringify(selectedContent)}</li>
-            </ul>
-            <hr/>
-            {renderedContent}
+        <div className="container mx-auto px-4 grid grid-cols-6 gap-4">
+            <div className="col-span-2">
+                <Editor
+                    type={selectedType} 
+                    contentId={selectedId}
+                    contentData={selectedContent}
+                    onTypeChange={handleTypeChange} 
+                    onContentChange={handleContentChange}
+                    onCreate={createContent}
+                />
+                <DebugWindow 
+                    type={selectedType} 
+                    contentId={selectedId} 
+                    contentData={selectedContent}
+                />                
+            </div>
+            <div className="col-span-4">
+                {renderedContent}
+            </div>
         </div>
     )
 }
