@@ -11,10 +11,9 @@ export function Paragraph({ content  = ''}: ParagraphProps) {
 export function ParagraphEditor(props: ParagraphProps & { onContentChange: (content: ParagraphProps) => void }) {
     const { content, onContentChange } = props
     return (
-        <div>
-            <label>
-                Paragraph Content: <input type='textarea' value={content} onChange={e => onContentChange({content: e.target.value})}/>
-            </label>
-        </div>
+        <>
+            <label className='col-span-4 font-bold'>Content</label>
+            <textarea className='col-span-8 textarea textarea-bordered' placeholder='Content' value={content} onChange={e => onContentChange({content: e.target.value})}/>
+        </>
     )
 }

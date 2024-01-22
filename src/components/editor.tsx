@@ -11,10 +11,12 @@ type EditorProps = {
     onTypeChange: (newType: ContentType) => void
     onContentChange: (content: ContentProps) => void
     onCreate: (type: ContentType, content: ContentProps) => void
+    onUpdate: (id: string, type: ContentType, content: ContentProps) => void,
+    onDelete: (id: string) => void
 }
 
 export default function Editor(props: EditorProps) {
-    const {contentId, type, contentData, onTypeChange, onContentChange, onCreate} = props
+    const {contentId, type, contentData, onTypeChange, onContentChange, onCreate, onUpdate, onDelete} = props
 
     function renderContentEditor(type: ContentType, content: ContentProps): ReactNode {
         switch(type) {
@@ -28,12 +30,36 @@ export default function Editor(props: EditorProps) {
             }
         }
     }
+    let actionButtons: ReactNode
+    if (contentId) {
+        actionButtons = (
+            <>
+                <button type='button' onClick={e => onUpdate(contentId, type, contentData)} className='btn btn-info col-span-8'>
+                    Save {ContentType[type]}
+                </button>
+                <button type='button' onClick={e => onDelete(contentId)} className='btn btn-error col-span-4'>
+                    Delete {ContentType[type]}
+                </button>
+            </>
+        )
+    } else {
+        actionButtons = (
+            <button type='button' onClick={e => onCreate(type, contentData)} className='btn btn-success col-span-12'>
+                Add new {ContentType[type]}
+            </button>
+        )
+    }
+    
+
     return (
-        <div className="">
-            <label>Item ID: {contentId}</label><br/>
-            <label>
-                Item Type:&nbsp; 
-                <select value={type} onChange={e => onTypeChange(getContentType(Number(e.target.value)))}>
+        <>
+            <div className='container mx-auto grid grid-cols-3 py-2'>
+                <label className='font-bold'>Item ID</label>
+                <label className='col-span-2 font-semibold text-sm'>{contentId}</label>
+            </div>
+            <div className='container mx-auto grid grid-cols-3'>
+                <label className='font-bold'>Item Type</label> 
+                <select value={type} onChange={e => onTypeChange(getContentType(Number(e.target.value)))} className='select select-bordered w-full col-span-2'>
                     {
                         Object.keys(ContentType).filter(v => isNaN(Number(v))).map((key, index) => 
                             <option key={index} value={index}>
@@ -42,15 +68,11 @@ export default function Editor(props: EditorProps) {
                         )
                     }
                 </select>
-            </label>
-            <hr/>
-            { renderContentEditor(type, contentData) }
-            <hr/>
-            { contentId ? '' : 
-                <button type='button' onClick={e => onCreate(type, contentData)} className=''>
-                    Add new {ContentType[type]}
-                </button>
-            }
-        </div>
+            </div>
+            <span className='divider'/>
+            <span className='container mx-auto grid grid-cols-12 gap-4'>{ renderContentEditor(type, contentData) }</span>
+            <span className='divider'/>
+            <span className='container mx-auto grid grid-cols-12 gap-4'>{ actionButtons }</span>
+        </>
     )
 }

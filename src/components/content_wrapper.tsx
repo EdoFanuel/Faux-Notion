@@ -24,10 +24,11 @@ export function ContentWrapper(props: WrapperProps) {
             break
     } 
     return (
-        <div id={id}>
-            {contentComponent}
-            <button type='button' onClick={e => onEdit(id)}>Edit</button>
-            <button type='button' onClick={e => onDelete(id)}>Delete</button>
+        <div id={id} className=' grid grid-cols-12'>
+            <button type='button' className='btn col-span-1'>Move</button>
+            <span className='col-span-9 px-4 py-2'>{contentComponent}</span>
+            <button type='button' onClick={e => onEdit(id)} className='btn col-span-1'>Edit</button>
+            <button type='button' onClick={e => onDelete(id)} className='btn col-span-1'>Delete</button>
         </div>
     )
 }

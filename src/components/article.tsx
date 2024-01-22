@@ -64,6 +64,11 @@ export default function Article() {
         resetEditor()
     }
 
+    function saveContent(id: string, type: ContentType, content: ContentProps) {
+        //TODO: call API to save data on backend
+        resetEditor()
+    }
+
     function deleteContent(id: string) {
         console.log(`Deleting content ID = ${id}`)
         setContentOrder(contentOrder.filter(x => x != id))
@@ -95,7 +100,10 @@ export default function Article() {
                     onTypeChange={handleTypeChange} 
                     onContentChange={handleContentChange}
                     onCreate={createContent}
+                    onUpdate={saveContent}
+                    onDelete={deleteContent}
                 />
+                <span className='divider'/>
                 <DebugWindow 
                     type={selectedType} 
                     contentId={selectedId} 
