@@ -1,10 +1,4 @@
-import { ContentType, ContentProps } from "@/common/component_type";
-
-type DebugProps = {
-    contentId ?: string,
-    type: ContentType,
-    contentData: ContentProps,
-}
+import { ContentType, DebugProps } from "@/common/props";
 
 export default function DebugWindow(props: DebugProps) {
     const { contentId, type, contentData } = props

@@ -1,8 +1,4 @@
-export interface ParagraphProps { 
-    content: string 
-}
-
-export const defaultProps = { content: ''}
+import { ParagraphProps } from "@/common/props"
 
 export function Paragraph({ content  = ''}: ParagraphProps) {
     return <p>{content}</p>

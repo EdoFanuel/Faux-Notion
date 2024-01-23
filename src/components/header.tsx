@@ -1,17 +1,13 @@
 import { clamp } from "@/common/common_functions";
+import { HeaderProps } from "@/common/props";
 
-export interface HeaderProps {
-    level: number,
-    title: string
-}
-export const defaultProps = { level: 1, title: ''}
 
 export function Header({ level = 1, title = ''}: HeaderProps) {
     level = clamp(level, 1, 6);
     switch (level) {
-        case 1: return (<h1 className='font-bold text-3xl'>{title}</h1>)
+        case 1: return (<h1 className='font-bold text-2xl'>{title}</h1>)
         case 2: return (<h2 className='font-bold text-2xl'>{title}</h2>)
-        case 3: return (<h3 className='font-bold text-2xl'>{title}</h3>)
+        case 3: return (<h3 className='font-bold text-xl'>{title}</h3>)
         case 4: return (<h4 className='font-bold text-xl'>{title}</h4>)
         case 5: return (<h5 className='font-bold text-lg'>{title}</h5>)
         case 6: return (<h6 className='font-bold'>{title}</h6>)

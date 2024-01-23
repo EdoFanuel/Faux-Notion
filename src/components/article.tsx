@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import Editor from "./editor";
-import { defaultProps as headerProps } from "./header";
-import { defaultProps as paragraphProps } from "./paragraph";
-import { Content, ContentProps, ContentType } from "../common/component_type";
+import { Content, ContentProps, ContentType, convertType, defaultHeaderProps } from "../common/props";
 import { generateUUID } from "@/common/common_functions";
 import { ContentWrapper } from "./content_wrapper";
 import DebugWindow from "./debug_window";
@@ -14,36 +12,7 @@ export default function Article() {
     const [contentOrder, setContentOrder] = useState<string[]>([])
     const [selectedId, setSelectedId] = useState<string | undefined>()
     const [selectedType, setSelectedType] = useState(ContentType.Header)
-    const [selectedContent, setSelectedContent] = useState<ContentProps>(headerProps)
-
-    function handleTypeChange(newType: ContentType) {
-        console.log(`change type to = ${ContentType[newType]}`)
-        let content: ContentProps;
-        switch(newType) {
-            case ContentType.Header: 
-                content = headerProps
-                break
-            case ContentType.Paragraph: 
-                content = paragraphProps
-                break
-        }
-        
-        setSelectedType(newType)
-        setSelectedContent(content)
-        if (selectedId && selectedId in contents) {
-            contents[selectedId] = { type: newType, content}
-            setContents(contents)
-        }
-    }
-
-    function handleContentChange(content: ContentProps) {
-        console.log(`change content to = ${JSON.stringify(content)}`)
-        setSelectedContent(content)
-        if (selectedId && selectedId in contents) {
-            contents[selectedId].content = content
-            setContents(contents)
-        }
-    }
+    const [selectedContent, setSelectedContent] = useState<ContentProps>(defaultHeaderProps)
 
     function editContent(id: string) {
         console.log(`Editing content ID = ${id}}`)
@@ -64,9 +33,30 @@ export default function Article() {
         resetEditor()
     }
 
-    function saveContent(id: string, type: ContentType, content: ContentProps) {
+    function updateContent(id: string | undefined, newType: ContentType, newContent: ContentProps, shouldReset: boolean) {
+        console.log(`Update content ID = ${id}`)        
+        let content = newContent;
+        if (newType != selectedType) {
+            content = convertType(newType, {type: selectedType, content: selectedContent})
+            setSelectedType(newType)
+        }
+        setSelectedContent(content)
+        console.log({
+            beforeType: ContentType[selectedType], 
+            beforeContent: selectedContent, 
+            afterType: ContentType[newType],
+            afterContent: content
+        })
+
+
+        if (id && id in contents) {
+            contents[id] = { type: newType, content: content }
+            setContents(contents)
+        }
         //TODO: call API to save data on backend
-        resetEditor()
+        if (shouldReset) {
+            resetEditor()
+        }
     }
 
     function deleteContent(id: string) {
@@ -83,7 +73,7 @@ export default function Article() {
     function resetEditor() {
         setSelectedId(undefined)
         setSelectedType(ContentType.Header)
-        setSelectedContent(headerProps)
+        setSelectedContent(defaultHeaderProps)
     }
 
     const renderedContent = contentOrder.map(id => {
@@ -97,10 +87,8 @@ export default function Article() {
                     type={selectedType} 
                     contentId={selectedId}
                     contentData={selectedContent}
-                    onTypeChange={handleTypeChange} 
-                    onContentChange={handleContentChange}
                     onCreate={createContent}
-                    onUpdate={saveContent}
+                    onUpdate={updateContent}
                     onDelete={deleteContent}
                 />
                 <span className='divider'/>
