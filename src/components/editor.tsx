@@ -71,9 +71,7 @@ export default function Editor(props: EditorProps) {
                 <select value={type} onChange={e => onUpdate(contentId, getContentType(Number(e.target.value), ContentType.Header), contentData, false)} className='select select-bordered w-full col-span-2'>
                     {
                         Object.keys(ContentType).filter(v => isNaN(Number(v))).map((key, index) => 
-                            <option key={index} value={index}>
-                                {key}
-                            </option>
+                            getContentType(index) == ContentType.Unknown ? '' : <option key={index} value={index}>{key}</option>
                         )
                     }
                 </select>
