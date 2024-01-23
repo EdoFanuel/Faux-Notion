@@ -14,6 +14,7 @@ export type DebugProps = {
 }
 
 export enum ContentType {
+    Unknown,
     Paragraph,
     Header
 }
@@ -29,6 +30,7 @@ export function getContentType(ordinal: number | ContentType, defaultType?: Cont
 
 function convertToParagraph(content: Content): ParagraphProps {
     switch(content.type) {
+        case ContentType.Unknown: return defaultParagraphProps
         case ContentType.Paragraph: return content.content as ParagraphProps
         case ContentType.Header: {
             const header = content.content as HeaderProps
@@ -39,6 +41,7 @@ function convertToParagraph(content: Content): ParagraphProps {
 
 function convertToHeader(content: Content): HeaderProps {
     switch(content.type) {
+        case ContentType.Unknown: return defaultHeaderProps
         case ContentType.Paragraph: {
             const paragraph = content.content as ParagraphProps
             return {level: defaultHeaderProps.level, title: paragraph.content}
@@ -47,10 +50,11 @@ function convertToHeader(content: Content): HeaderProps {
     }
 }
 
-export function convertType(newType: ContentType, oldContent: Content): ContentProps {
+export function convertType(newType: ContentType, oldContent ?: Content): ContentProps {
     switch(newType) {
-        case ContentType.Paragraph: return convertToParagraph(oldContent)
-        case ContentType.Header: return convertToHeader(oldContent)
+        case ContentType.Unknown: return defaultHeaderProps
+        case ContentType.Paragraph: return convertToParagraph(oldContent!!)
+        case ContentType.Header: return convertToHeader(oldContent!!)
     }
 }
 

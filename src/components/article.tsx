@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Editor from "./editor";
-import { Content, ContentProps, ContentType, convertType, defaultHeaderProps } from "../common/props";
+import { Content, ContentProps, ContentType, convertType } from "../common/props";
 import { generateUUID } from "@/common/common_functions";
 import { ContentWrapper } from "./content_wrapper";
 import DebugWindow from "./debug_window";
@@ -12,7 +12,7 @@ export default function Article() {
     const [contentOrder, setContentOrder] = useState<string[]>([])
     const [selectedId, setSelectedId] = useState<string | undefined>()
     const [selectedType, setSelectedType] = useState(ContentType.Header)
-    const [selectedContent, setSelectedContent] = useState<ContentProps>(defaultHeaderProps)
+    const [selectedContent, setSelectedContent] = useState<ContentProps>(convertType(ContentType.Unknown))
 
     function editContent(id: string) {
         console.log(`Editing content ID = ${id}}`)
@@ -73,7 +73,7 @@ export default function Article() {
     function resetEditor() {
         setSelectedId(undefined)
         setSelectedType(ContentType.Header)
-        setSelectedContent(defaultHeaderProps)
+        setSelectedContent(convertType(ContentType.Unknown))
     }
 
     const renderedContent = contentOrder.map(id => {
