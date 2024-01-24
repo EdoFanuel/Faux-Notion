@@ -116,7 +116,7 @@ export default function Article() {
         )
     })
     return (    
-        <div className="container flex mx-auto grid grid-cols-6 gap-4 px-1">
+        <div className="container mx-auto grid grid-cols-6 gap-4 px-1">
             <div className="col-span-2 h-screen sticky top-0 mx-0 bg-gray-800 px-4">
                 <Editor
                     type={selectedType} 
