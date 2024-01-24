@@ -1,11 +1,28 @@
 'use client'
 
-import { useState } from "react";
-import Editor from "./editor";
+import { useEffect, useState } from "react";
+import { DragDropContext, Draggable, Droppable as DefaultDroppable, DroppableProps } from "react-beautiful-dnd";
 import { Content, ContentProps, ContentType, convertType } from "../common/props";
 import { generateUUID } from "@/common/common_functions";
 import { ContentWrapper } from "./content_wrapper";
+import Editor from "./editor";
 import DebugWindow from "./debug_window";
+
+export const Droppable = ({ children, ...props }: DroppableProps) => {
+    const [enabled, setEnabled] = useState(false);
+    useEffect(() => {
+      const animation = requestAnimationFrame(() => setEnabled(true));
+      return () => {
+        cancelAnimationFrame(animation);
+        setEnabled(false);
+      };
+    }, []);
+    if (!enabled) {
+      return null;
+    }
+    return <DefaultDroppable {...props}>{children}</DefaultDroppable>;
+  };
+  
 
 export default function Article() {
     const [contents, setContents] = useState<Record<string, Content>>({})
@@ -70,19 +87,37 @@ export default function Article() {
         if (id == selectedId) resetEditor()
     }
 
+    function moveContent(source: number, destination: number) {
+        if (destination < 0) {
+            return
+        }
+        const newOrder = [...contentOrder]
+        const [removed] = newOrder.splice(source, 1)
+        newOrder.splice(destination, 0, removed)
+        setContentOrder(newOrder)
+    }
+
     function resetEditor() {
         setSelectedId(undefined)
         setSelectedType(ContentType.Header)
         setSelectedContent(convertType(ContentType.Unknown))
     }
 
-    const renderedContent = contentOrder.map(id => {
+    const renderedContent = contentOrder.map((id, idx) => {
         const content = contents[id]
-        return <ContentWrapper key={id} id={id} content={content} onEdit={editContent} onDelete={deleteContent}/>
+        return  (
+            <Draggable key={id} draggableId={id} index={idx}>
+                {(provided, snapshot) => (
+                    <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
+                        <ContentWrapper id={id} content={content} isSelected={id === selectedId} onEdit={editContent} onDelete={deleteContent}/>
+                    </div>
+                )}
+            </Draggable>
+        )
     })
     return (    
-        <div className="container mx-auto px-4 grid grid-cols-6 gap-4">
-            <div className="col-span-2">
+        <div className="container flex mx-auto grid grid-cols-6 gap-4 px-1">
+            <div className="col-span-2 h-screen sticky top-0 mx-0 bg-gray-800 px-4">
                 <Editor
                     type={selectedType} 
                     contentId={selectedId}
@@ -99,7 +134,15 @@ export default function Article() {
                 />                
             </div>
             <div className="col-span-4">
-                {renderedContent}
+                <DragDropContext onDragEnd={(result, provided) => moveContent(result.source.index, result.destination?.index ?? -1)}>
+                    <Droppable droppableId="article-content">
+                        {(provided, snapshot) => (
+                            <div {...provided.droppableProps} ref={provided.innerRef} >
+                                {renderedContent}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
             </div>
         </div>
     )
